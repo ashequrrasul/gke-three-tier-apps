@@ -4,7 +4,24 @@ on:
   push:
     branches: ["main"]
   workflow_dispatch:
+    inputs:
+      build_backend:
+        description: "Force build backend"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
 
+      build_frontend:
+        description: "Force build frontend"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
 env:
   PROJECT_ID: project-40d105bf-bb2b-4bf6-b9f
   REGION: us-east5
@@ -35,7 +52,7 @@ jobs:
 
   build-backend:
     needs: detect-changes
-    if: needs.detect-changes.outputs.backend == 'true'
+    if: needs.detect-changes.outputs.backend == 'true' || github.event.inputs.build_backend == 'true'
     runs-on: ubuntu-latest
 
     permissions:
@@ -76,13 +93,13 @@ jobs:
 
           sed -i "s|image: us-east5-docker.pkg.dev/project-40d105bf-bb2b-4bf6-b9f/gcp-three-tier/backend:.*|image: $BACKEND_IMAGE|g" k8s/backend-deployment.yaml
 
-          git add backend-deployment.yaml
+          git add k8s/backend-deployment.yaml
           git commit -m "Update backend image to ${{ github.sha }}" || echo "No backend image change"
           git push origin main
 
   build-frontend:
     needs: detect-changes
-    if: needs.detect-changes.outputs.frontend == 'true'
+    if: needs.detect-changes.outputs.frontend == 'true' || github.event.inputs.build_frontend == 'true'
     runs-on: ubuntu-latest
 
     permissions:
@@ -123,6 +140,6 @@ jobs:
 
           sed -i "s|image: us-east5-docker.pkg.dev/project-40d105bf-bb2b-4bf6-b9f/gcp-three-tier/frontend:.*|image: $FRONTEND_IMAGE|g" k8s/frontend-deployment.yaml
 
-          git add frontend-deployment.yaml
+          git add k8s/frontend-deployment.yaml
           git commit -m "Update frontend image to ${{ github.sha }}" || echo "No frontend image change"
           git push origin main
