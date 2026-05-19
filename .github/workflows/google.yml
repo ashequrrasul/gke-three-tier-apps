@@ -52,7 +52,9 @@ jobs:
 
   build-backend:
     needs: detect-changes
-    if: needs.detect-changes.outputs.backend == 'true' || github.event.inputs.build_backend == 'true'
+    if: |
+      github.event_name == 'workflow_dispatch' && github.event.inputs.build_backend == 'true' ||
+      github.event_name == 'push' && needs.detect-changes.outputs.backend == 'true'
     runs-on: ubuntu-latest
 
     permissions:
@@ -99,7 +101,9 @@ jobs:
 
   build-frontend:
     needs: detect-changes
-    if: needs.detect-changes.outputs.frontend == 'true' || github.event.inputs.build_frontend == 'true'
+    if: |
+      github.event_name == 'workflow_dispatch' && github.event.inputs.build_frontend == 'true' ||
+      github.event_name == 'push' && needs.detect-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
 
     permissions:
