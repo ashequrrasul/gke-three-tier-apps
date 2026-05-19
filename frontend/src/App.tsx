@@ -64,7 +64,7 @@ function App() {
 
   return (
     <div style={{ padding: "30px", fontFamily: "Arial" }}>
-      <h1>GCP Three Tier Frontend</h1>
+      <h1>GKE Three Tier Frontend</h1>
 
       <h2>Products from Go Backend</h2>
 
