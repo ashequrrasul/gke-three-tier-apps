@@ -143,7 +143,7 @@ func (app *App) productsHandler(w http.ResponseWriter, r *http.Request) {
 			&product.Stock,
 		)
 		if err != nil {
-			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "failed to scan product!"})
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "failed to scan product!!"})
 			return
 		}
 
