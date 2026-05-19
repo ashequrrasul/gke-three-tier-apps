@@ -1,0 +1,17 @@
+gcloud container clusters create gke-three-tier \
+  --zone us-east5-a \
+  --network myvpc \
+  --subnetwork gke-subnet \
+  --cluster-secondary-range-name gke-pods \
+  --services-secondary-range-name gke-services \
+  --num-nodes 1 \
+  --enable-autoscaling \
+  --min-nodes 1 \
+  --max-nodes 3 \
+  --machine-type e2-medium \
+  --disk-type pd-balanced \
+  --disk-size 30 \
+  --enable-ip-alias \
+  --workload-pool=project-40d105bf-bb2b-4bf6-b9f.svc.id.goog \
+  --enable-secret-manager \
+  --release-channel regular
