@@ -74,7 +74,7 @@ jobs:
           git clone https://x-access-token:${{ secrets.GITOPS_PAT }}@github.com/ashequrrasul/gke-three-tier-gitops.git gitops
           cd gitops
 
-          sed -i "s|image: us-east5-docker.pkg.dev/project-40d105bf-bb2b-4bf6-b9f/gcp-three-tier/backend:.*|image: $BACKEND_IMAGE|g" backend-deployment.yaml
+          sed -i "s|image: us-east5-docker.pkg.dev/project-40d105bf-bb2b-4bf6-b9f/gcp-three-tier/backend:.*|image: $BACKEND_IMAGE|g" k8s/backend-deployment.yaml
 
           git add backend-deployment.yaml
           git commit -m "Update backend image to ${{ github.sha }}" || echo "No backend image change"
@@ -121,7 +121,7 @@ jobs:
           git clone https://x-access-token:${{ secrets.GITOPS_PAT }}@github.com/ashequrrasul/gke-three-tier-gitops.git gitops
           cd gitops
 
-          sed -i "s|image: us-east5-docker.pkg.dev/project-40d105bf-bb2b-4bf6-b9f/gcp-three-tier/frontend:.*|image: $FRONTEND_IMAGE|g" frontend-deployment.yaml
+          sed -i "s|image: us-east5-docker.pkg.dev/project-40d105bf-bb2b-4bf6-b9f/gcp-three-tier/frontend:.*|image: $FRONTEND_IMAGE|g" k8s/frontend-deployment.yaml
 
           git add frontend-deployment.yaml
           git commit -m "Update frontend image to ${{ github.sha }}" || echo "No frontend image change"
