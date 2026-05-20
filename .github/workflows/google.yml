@@ -93,11 +93,22 @@ jobs:
           git clone https://x-access-token:${{ secrets.GITOPS_PAT }}@github.com/ashequrrasul/gke-three-tier-gitops.git gitops
           cd gitops
 
-          sed -i "s|image: us-east5-docker.pkg.dev/project-40d105bf-bb2b-4bf6-b9f/gcp-three-tier/backend:.*|image: $BACKEND_IMAGE|g" k8s/backend-deployment.yaml
+           yq -i '.backend.image.tag = "${{ github.sha }}"' charts/three-tier-app/values.yaml
 
-          git add k8s/backend-deployment.yaml
+          git add charts/three-tier-app/values.yaml
           git commit -m "Update backend image to ${{ github.sha }}" || echo "No backend image change"
           git push origin main
+      - name: Render Helm manifests
+        run: |
+          mkdir -p rendered
+          helm template gke-three-tier-helm-app gitops/charts/three-tier-app \
+            -n three-tier-helm > rendered/three-tier-app-${{ github.sha }}.yaml
+
+      - name: Upload rendered manifests
+        uses: actions/upload-artifact@v4
+        with:
+          name: rendered-manifests-${{ github.sha }}
+          path: rendered/
 
   build-frontend:
     needs: detect-changes
@@ -142,8 +153,19 @@ jobs:
           git clone https://x-access-token:${{ secrets.GITOPS_PAT }}@github.com/ashequrrasul/gke-three-tier-gitops.git gitops
           cd gitops
 
-          sed -i "s|image: us-east5-docker.pkg.dev/project-40d105bf-bb2b-4bf6-b9f/gcp-three-tier/frontend:.*|image: $FRONTEND_IMAGE|g" k8s/frontend-deployment.yaml
+          yq -i '.frontend.image.tag = "${{ github.sha }}"' charts/three-tier-app/values.yaml
 
-          git add k8s/frontend-deployment.yaml
+          git add charts/three-tier-app/values.yaml
           git commit -m "Update frontend image to ${{ github.sha }}" || echo "No frontend image change"
           git push origin main
+      - name: Render Helm manifests
+        run: |
+          mkdir -p rendered
+          helm template gke-three-tier-helm-app gitops/charts/three-tier-app \
+            -n three-tier-helm > rendered/three-tier-app-${{ github.sha }}.yaml
+
+      - name: Upload rendered manifests
+        uses: actions/upload-artifact@v4
+        with:
+          name: rendered-manifests-${{ github.sha }}
+          path: rendered/
