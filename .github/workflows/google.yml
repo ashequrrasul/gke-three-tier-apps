@@ -101,7 +101,7 @@ jobs:
       - name: Render Helm manifests
         run: |
           mkdir -p rendered
-          helm template gke-three-tier-helm-app gitops/charts/three-tier-app \
+          helm template gke-three-tier-helm-app  gitops/charts/three-tier-app \
             -n three-tier-helm > rendered/three-tier-app-${{ github.sha }}.yaml
 
       - name: Upload rendered manifests

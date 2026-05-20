@@ -155,7 +155,7 @@ func (app *App) productsHandler(w http.ResponseWriter, r *http.Request) {
 
 func (app *App) ordersHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		writeJSON(w, http.StatusMethodNotAllowed, map[string]string{"error": "method not allowed"})
+		writeJSON(w, http.StatusMethodNotAllowed, map[string]string{"error": "method not allowed!"})
 		return
 	}
 
